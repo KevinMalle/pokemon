@@ -4,42 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quel Pokémon es-tu ?</title>
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-        font-family: Arial, sans-serif;
-      }
-
-      header,
-      main,
-      footer {
-        text-align: center;
-        width: 100%;
-      }
-
-      #pokemonForm {
-        margin-bottom: 20px;
-      }
-
-      #result img {
-        width: 300px; /* Augmentation de la taille de l'image */
-        height: 300px;
-      }
-
-      form textarea {
-        width: 200px;
-        height: 50px;
-      }
-
-      form button {
-        margin-top: 10px;
-      }
-    </style>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
     <header>
@@ -56,50 +21,7 @@
       </form>
     </main>
 
-    <script>
-      function getPokemonIdFromName(name) {
-        let sum = 0;
-        for (let i = 0; i < name.length; i++) {
-          sum += name.charCodeAt(i);
-        }
-        return (sum % 1025) + 1;
-      }
-
-      document
-        .getElementById("pokemonForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault(); // Empêche la soumission du formulaire
-
-          const prenom = document
-            .getElementById("message")
-            .value.trim()
-            .toLowerCase();
-          const pokemonId = getPokemonIdFromName(prenom);
-          const apiUrl = `https://tyradex.vercel.app/api/v1/pokemon/${pokemonId}`;
-
-          fetch(apiUrl)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Pokémon non trouvé");
-              }
-              return response.json();
-            })
-            .then((data) => {
-              const resultDiv = document.getElementById("result");
-              resultDiv.innerHTML = `
-                <h2>Voici votre Pokémon :</h2>
-                <img src="${data.sprites.regular}" alt="${data.name.fr}">
-                <p>Nom : ${data.name.fr}</p>
-                <p>ID : ${data.pokedex_id}</p>
-              `;
-            })
-            .catch((error) => {
-              const resultDiv = document.getElementById("result");
-              resultDiv.innerHTML = `<p>${error.message}</p>`;
-              console.error("Erreur:", error);
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 
     <footer>
       <p>
