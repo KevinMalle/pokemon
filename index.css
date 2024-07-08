@@ -1,0 +1,34 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+header,
+main,
+footer {
+  text-align: center;
+  width: 100%;
+}
+
+#pokemonForm {
+  margin-bottom: 20px;
+}
+
+#result img {
+  width: 300px; /* Augmentation de la taille de l'image */
+  height: 300px;
+}
+
+form textarea {
+  width: 200px;
+  height: 50px;
+}
+
+form button {
+  margin-top: 10px;
+}
