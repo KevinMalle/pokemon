@@ -20,13 +20,8 @@ jobs:
         version: 'latest'
         project_id: pokedevops
 
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v1
-      with:
-        credentials_json: '${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}'
-
     - name: Configure Docker to use gcloud as a credential helper
-      run: gcloud auth configure-docker europe-west9-docker.pkg.dev
+      run: gcloud auth activate-service-account --key-file ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
 
     - name: Build the Docker image
       run: docker build -t europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon .
