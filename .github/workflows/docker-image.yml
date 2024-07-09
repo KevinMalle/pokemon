@@ -33,5 +33,4 @@ jobs:
       run: docker push europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon
 
     - name: Deploy to Cloud Run
-      run: |
-         gcloud run deploy --image=europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon service-student-kevin-dev
+      run: gcloud run deploy --image=europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon service-student-kevin-dev
