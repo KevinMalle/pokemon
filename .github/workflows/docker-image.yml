@@ -21,8 +21,10 @@ jobs:
         project_id: pokedevops
 
     - name: Authenticate to Google Cloud
+      env:
+        GCLOUD_KEY: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
       run: |
-        echo "${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}" > ${HOME}/gcloud-key.json
+        echo "$GCLOUD_KEY" > ${HOME}/gcloud-key.json
         gcloud auth activate-service-account --key-file=${HOME}/gcloud-key.json
         gcloud auth configure-docker europe-west9-docker.pkg.dev
 
