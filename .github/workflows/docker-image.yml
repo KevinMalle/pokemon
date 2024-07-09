@@ -1,0 +1,37 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        version: 'latest'
+        service_account_key: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
+        export_default_credentials: true
+    - name: Configure Docker to use the gcloud command-line tool as a credential helper
+      run: |
+        gcloud auth configure-docker europe-west9-docker.pkg.dev
+
+    - name: Build the Docker image
+      run: |
+        docker build -t europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon .
+
+    - name: Push the Docker image
+      run: |
+        docker push europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy --image=europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon service-student-kevin-dev
