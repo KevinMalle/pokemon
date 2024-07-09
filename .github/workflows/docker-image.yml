@@ -24,7 +24,7 @@ jobs:
       env:
         GCLOUD_KEY: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
       run: |
-        echo "$GCLOUD_KEY" > ${HOME}/gcloud-key.json
+        printf "%s" "$GCLOUD_KEY" > ${HOME}/gcloud-key.json
         gcloud auth activate-service-account --key-file=${HOME}/gcloud-key.json
         gcloud auth configure-docker europe-west9-docker.pkg.dev
 
