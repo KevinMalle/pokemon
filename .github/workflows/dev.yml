@@ -1,37 +1,49 @@
-name: Build, Push & Deploy Docker Image to Google Cloud
-
+name: docker build / push / deploy
 on:
   push:
     branches:
-      - main
+    - main
+
+env:
+  PROJECT_ID: pokedevops
+  APP_NAME: quelpoke
+  REGION: europe-west9
+  REGISTRY: student-kevin
+  CLOUDRUN_SERVICE_DEV: service-student-kevin-dev
 
 jobs:
-  build-and-push:
+  docker-build-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: export short sha env
+        run: echo "GITHUB_SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - name: export registry domain
+        run: echo "REGISTRY_DOMAIN=${REGION}-docker.pkg.dev" >> $GITHUB_ENV
 
-      - name: Log in to Google Cloud
-        uses: google-github-actions/auth@v0
+      - name: export image name env
+        run: echo "IMAGE_NAME=${REGISTRY_DOMAIN}/${PROJECT_ID}/${REGISTRY}/${APP_NAME}:${GITHUB_SHA_SHORT}" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v4
+
+      - name: "gcloud auth"
+        uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.GCLOUD_SERVICE_KEY }}'
+          credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
 
-      - name: Configure Docker for Google Cloud
-        run: |
-          gcloud auth configure-docker europe-west9-docker.pkg.dev
-      - name: Build the Docker image
-        run: docker build -t europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon .
+      - name: gcloud configure docker 
+        run: gcloud --quiet auth configure-docker ${REGION}-docker.pkg.dev
 
-      - name: Push the Docker image
-        run: docker push europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon
-        
-      - name: Deploy to Google Cloud Run
+      - name: docker build 
+        run: docker build --tag=${IMAGE_NAME} .
+      
+      - name: docker push 
+        run: docker push ${IMAGE_NAME}
+
+      - name: gcloud run deploy
         run: |
-          gcloud run deploy service-student-kevin-dev --image=europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon --project pokedevops --region europe-west9 --allow-unauthenticated
-        env:
-          GCP_PROJECT: pokedevops
-          GCP_REGION: europe-west9
+          gcloud run deploy ${CLOUDRUN_SERVICE_DEV} \
+          --image=${IMAGE_NAME} \
+          --project=${PROJECT_ID} \
+          --region=${REGION} \
+          --set-env-vars=VERSION=${GITHUB_SHA_SHORT}
