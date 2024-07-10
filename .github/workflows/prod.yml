@@ -1,1 +1,17 @@
+name: Build, Push & Deploy Docker Image to Google Cloud
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:                   
+  build-and-push-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Google Cloud Run PROD with $version
+        run: |
+          gcloud run deploy service-student-kevin-dev --image=europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon --project pokedevops --region europe-west9 --allow-unauthenticated
+        env:
+          GCP_PROJECT: pokedevops
+          GCP_REGION: europe-west9
