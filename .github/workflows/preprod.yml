@@ -5,7 +5,7 @@ on:
     - "*"
 env:
   PROJECT_ID: pokedevops
-  APP_NAME: quelpoke
+  APP_NAME: pokemon
   REGION: europe-west9
   REGISTRY: student-kevin
   CLOUDRUN_SERVICE: service-student-kevin-preprod
