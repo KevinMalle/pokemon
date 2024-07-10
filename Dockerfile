@@ -1,6 +1,8 @@
 # Utiliser une image de base légère avec un serveur web
 FROM nginx:1.21.6-alpine
 
+ENV VERSION DEV
+
 # Copier votre code HTML dans le répertoire par défaut de nginx
 COPY . /usr/share/nginx/html
 
