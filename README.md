@@ -20,6 +20,6 @@ Pour configurer l'authentification via gcloud, faire : gcloud auth activate-serv
 # Ajouter le service account
 Pour faire ça, ecrire : gcloud auth configure-docker europe-west9-docker.pkg.dev
 
-# Deployer en distant :
+# Deployer en distant
 
 Pour faire ça, effectuer cette commande : gcloud run deploy --image=europe-west9-docker.pkg.dev/pokedevops/student-kevin/pokemon service-student-kevin-dev --project pokedevops
